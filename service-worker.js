@@ -1,8 +1,19 @@
+/**
+ * service-worker.js - Service Worker for Padel Tournament Manager
+ * MIT License (c) 2025 André Smit
+ */
+
 const CACHE_NAME = 'padel-tournament-v1';
 const urlsToCache = [
     './',
     './index.html',
-    './manifest.json'
+    './manifest.json',
+    './css/styles.css',
+    './js/timer.js',
+    './js/audio-utils.js',
+    './js/notifications.js',
+    './icons/padel-icon.svg',
+    './icons/padel-icon-192.png'
 ];
 
 // Install Service Worker
@@ -21,13 +32,34 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request)
             .then((response) => {
-                    // Return cached version or fetch from network
-                    if (response) {
+                // Return cached version or fetch from network
+                if (response) {
+                    return response;
+                }
+
+                // Clone the request because it's a one-time-use stream
+                const fetchRequest = event.request.clone();
+
+                return fetch(fetchRequest).then(
+                    (response) => {
+                        // Check if valid response
+                        if (!response || response.status !== 200 || response.type !== 'basic') {
+                            return response;
+                        }
+
+                        // Clone the response because it's a one-time-use stream
+                        const responseToCache = response.clone();
+
+                        // Add the new response to cache
+                        caches.open(CACHE_NAME)
+                            .then((cache) => {
+                                cache.put(event.request, responseToCache);
+                            });
+
                         return response;
                     }
-                    return fetch(event.request);
-                }
-            )
+                );
+            })
     );
 });
 
