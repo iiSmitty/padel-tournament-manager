@@ -234,7 +234,8 @@
 
         .round-navigation {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
             margin: 20px 0;
         }
@@ -242,12 +243,22 @@
         .round-info {
             text-align: center;
             flex: 1;
+            width: 100%;
+            margin: 15px 0;
+            order: 1;
         }
 
         .round-title {
             font-size: 1.5em;
             color: #4CAF50;
             font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            order: 2;
         }
 
         .hidden {
@@ -327,11 +338,10 @@
         }
 
         .timer-controls {
-            display: flex;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin: 15px 0;
-            flex-wrap: wrap;
         }
 
         .timer-btn {
@@ -345,6 +355,10 @@
             font-weight: bold;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
         }
 
         .timer-btn:hover {
@@ -359,8 +373,8 @@
 
         .timer-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
             margin-top: 15px;
         }
 
@@ -379,6 +393,66 @@
         .timer-stat-label {
             font-size: 0.9em;
             opacity: 0.8;
+        }
+
+        @media (min-width: 768px) {
+            .round-navigation {
+                flex-direction: row;
+            }
+
+            .round-info {
+                order: 2;
+                margin: 0 15px;
+            }
+
+            .nav-buttons {
+                width: auto;
+                order: 1;
+            }
+
+            .timer-controls {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 10px;
+            }
+
+            .card {
+                padding: 15px;
+                margin: 10px 0;
+            }
+
+            .btn {
+                padding: 10px 15px;
+                font-size: 14px;
+                min-width: 100px;
+            }
+
+            .timer-display {
+                font-size: 2em;
+            }
+
+            .timer-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .timer-stat {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .timer-stat-label {
+                margin-right: 10px;
+            }
         }
     </style>
 </head>
@@ -419,14 +493,16 @@
     <div id="tournamentScreen" class="hidden">
         <!-- Round Navigation -->
         <div class="round-navigation card">
-            <button class="btn btn-secondary" onclick="previousRound()" id="prevBtn">⬅️ Previous</button>
             <div class="round-info">
-                <div class="round-title" id="roundTitle">Round 1</div>
+                <div class="round-title" id="roundTitle">Round ${round.roundNumber}</div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill" style="width: 0%"></div>
                 </div>
             </div>
-            <button class="btn btn-secondary" onclick="nextRound()" id="nextBtn">Next ➡️</button>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="previousRound()" id="prevBtn">⬅️ Previous</button>
+                <button class="btn btn-secondary" onclick="nextRound()" id="nextBtn">Next ➡️</button>
+            </div>
         </div>
 
         <!-- Timer Section -->
@@ -436,21 +512,21 @@
             <div class="timer-controls">
                 <button class="timer-btn" onclick="startRoundTimer()" id="startTimerBtn">▶️ Start</button>
                 <button class="timer-btn" onclick="pauseRoundTimer()" id="pauseTimerBtn">⏸️ Pause</button>
-                <button class="timer-btn" onclick="resetRoundTimer()">🔄 Reset Round</button>
-                <button class="timer-btn" onclick="finishRound()">✅ Finish Round</button>
+                <button class="timer-btn" onclick="resetRoundTimer()">🔄 Reset</button>
+                <button class="timer-btn" onclick="finishRound()">✅ Finish</button>
             </div>
             <div class="timer-stats">
                 <div class="timer-stat">
-                    <div class="timer-stat-value" id="avgRoundTime">--:--</div>
                     <div class="timer-stat-label">Avg Round</div>
+                    <div class="timer-stat-value" id="avgRoundTime">--:--</div>
                 </div>
                 <div class="timer-stat">
-                    <div class="timer-stat-value" id="totalTournamentTime">--:--</div>
                     <div class="timer-stat-label">Total Time</div>
+                    <div class="timer-stat-value" id="totalTournamentTime">--:--</div>
                 </div>
                 <div class="timer-stat">
-                    <div class="timer-stat-value" id="estimatedFinish">--:--</div>
                     <div class="timer-stat-label">Est. Finish</div>
+                    <div class="timer-stat-value" id="estimatedFinish">--:--</div>
                 </div>
             </div>
         </div>
