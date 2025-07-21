@@ -1,8 +1,8 @@
 const CACHE_NAME = 'padel-tournament-v1';
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/manifest.json'
+    './',
+    './index.html',
+    './manifest.json'
 ];
 
 // Install Service Worker
